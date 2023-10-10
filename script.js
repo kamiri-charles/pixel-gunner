@@ -1,3 +1,9 @@
+import Player from "./modules/Player.js";
+import Enemy from "./modules/Enemy.js";
+import Projectile from "./modules/Projectile.js";
+import Particle from "./modules/Particle.js";
+
+
 window.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
@@ -7,110 +13,10 @@ window.addEventListener('DOMContentLoaded', () => {
     const modal_score = document.getElementById('modal-score');
     
     canvas.width = innerWidth;
-    canvas.height = innerHeight;
-    
-    class Player {
-        constructor(x, y, radius, color) {
-            this.x = x;
-            this.y = y;
-            this.radius = radius;
-            this.color = color;
-        }
-        
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-            ctx.fillStyle = this.color;
-            ctx.fill();
-            ctx.closePath();
-        }
-    };
-    
-    class Projectile {
-        constructor(x, y, radius, color, velocity) {
-            this.x = x;
-            this.y = y;
-            this.radius = radius;
-            this.color = color;
-            this.velocity = velocity;
-        }
-        
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-            ctx.fillStyle = this.color;
-            ctx.fill();
-            ctx.closePath();
-        }
-        
-        update() {
-            this.draw();
-            this.x = this.x + this.velocity.x;
-            this.y = this.y + this.velocity.y;
-        }
-    }
-    
-    
-    class Enemy {
-        constructor(x, y, radius, color, velocity) {
-            this.x = x;
-            this.y = y;
-            this.radius = radius;
-            this.color = color;
-            this.velocity = velocity;
-        }
-        
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-            ctx.fillStyle = this.color;
-            ctx.fill();
-            ctx.closePath();
-        }
-        
-        update() {
-            this.draw();
-            this.x = this.x + this.velocity.x;
-            this.y = this.y + this.velocity.y;
-        }
-    }
-    
-    
-    const friction = 0.99;
-    class Particle {
-        constructor(x, y, radius, color, velocity) {
-            this.x = x;
-            this.y = y;
-            this.radius = radius;
-            this.color = color;
-            this.velocity = velocity;
-            this.alpha = 1;
-        }
-        
-        draw() {
-            ctx.save();
-            ctx.globalAlpha = this.alpha;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-            ctx.fillStyle = this.color;
-            ctx.fill();
-            ctx.closePath();
-            ctx.restore();
-        }
-        
-        update() {
-            this.draw();
-            this.velocity.x *= friction;
-            this.velocity.y *= friction;
-            this.x = this.x + this.velocity.x;
-            this.y = this.y + this.velocity.y;
-            this.alpha -= 0.01;
-        }
-    }
+    canvas.height = innerHeight;   
     
     
     let player = new Player(canvas.width * 0.5, canvas.height * 0.5, 15, 'white');
-    
     let projectiles = [];
     let enemies = [];
     let particles = [];
@@ -170,20 +76,20 @@ window.addEventListener('DOMContentLoaded', () => {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.closePath();
             
-            player.draw();
+            player.draw(ctx);
             
             // Particle effect
             particles.forEach((particle, idx) => {
                 if (particle.alpha <= 0) {
                     setTimeout(() => particles.splice(idx, 1) ,0);
                 } else {
-                    particle.update();
+                    particle.update(ctx);
                 };
             });
             
             // Projectiles
             projectiles.forEach((p, idx) => {
-                p.update();
+                p.update(ctx);
                 
                 if (p.x + p.radius < 0 ||
                     p.x - p.radius > canvas.width ||
@@ -195,7 +101,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 
                 // Enemies
                 enemies.forEach((e, e_idx) => {
-                    e.update();
+                    e.update(ctx);
                     
                     // Collision with player
                     let player_dist = Math.hypot(player.x - e.x, player.y - e.y);
