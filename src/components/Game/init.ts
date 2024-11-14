@@ -1,19 +1,12 @@
-export const canvas_init = (canvas: HTMLCanvasElement, data: any) => {
-    canvas.width = 800;
-    canvas.height = 600;
-    const ctx = canvas.getContext("2d");
-    if (ctx) {
-        ctx.fillStyle = "grey";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        if (data) {
-            console.log(data);
-            data.forEach((entity: any) => {
-                ctx.beginPath();
-                ctx.fillStyle = 'red';
-                ctx.fillRect(entity.position[0], entity.position[1], entity.width, entity.height);
-            })
-        }
-    }
+export const handle_rendering = (context: CanvasRenderingContext2D, data: any) => {
+    // Clear canvas
+    context.fillStyle = "white";
+    context.fillRect(0, 0, 800, 600);
+    
+    data.forEach((entity: any) => {
+        context.beginPath();
+        context.fillStyle = "red";
+        context.fillRect(entity.position[0], entity.position[1], entity.with, entity.height);
+    })
 }
 

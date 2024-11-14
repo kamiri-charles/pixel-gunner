@@ -3,7 +3,7 @@ import Game from "./components/Game";
 import "./App.css";
 
 function App() {
-	const [gameData, setGameData] = useState();
+	const [gameData, setGameData] = useState<any>();
 
 	useEffect(() => {
 		const ws = new WebSocket("ws://localhost:8765");
@@ -11,7 +11,6 @@ function App() {
 		// When the connection is established
 		ws.onopen = () => {
 			console.log("Connected to the WebSocket server");
-			console.log(ws);
 		};
 
 		ws.onmessage = (message) => {

@@ -1,5 +1,6 @@
-import { useEffect, useRef } from "react";
-import { canvas_init } from "./init";
+import { useEffect, useRef, useState } from "react";
+import { handle_rendering } from "./init";
+import { Player } from "./player";
 import "./styles.css";
 
 interface GameProps {
@@ -8,10 +9,28 @@ interface GameProps {
 
 const Game: React.FC<GameProps> = ({ data }) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
+	const [renderingContext, setRenderringContext] = useState<CanvasRenderingContext2D>();
+	const player = new Player();
 
 	useEffect(() => {
-		if (canvasRef.current) {
-			canvas_init(canvasRef.current, data);
+		if (data) {
+			if (data.initial != undefined || data.initial) {
+				player.init_vars(data.id, {x: data.pos_x, y: data.pos_y}, data.width, data.height);
+
+				// Initialize canvas
+				if (canvasRef.current) {
+					console.log("canvas init")
+					canvasRef.current.width = 800;
+					canvasRef.current.height = 600;
+					const c = canvasRef.current.getContext("2d");
+					if (c) setRenderringContext(c);
+				}
+				
+			} else {
+				if (renderingContext) {
+					handle_rendering(renderingContext, data);
+				}
+			}
 		}
 	}, [data]);
 
