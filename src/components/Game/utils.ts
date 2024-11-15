@@ -6,7 +6,7 @@ export const handle_rendering = (context: CanvasRenderingContext2D, data: any) =
     data.forEach((entity: any) => {
         context.beginPath();
         context.fillStyle = "red";
-        context.fillRect(entity.position[0], entity.position[1], entity.with, entity.height);
+        context.fillRect(entity.position[0], entity.position[1], entity.width, entity.height);
     })
 }
 

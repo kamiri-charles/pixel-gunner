@@ -1,29 +1,34 @@
 export class Player {
-    id: string;
-    position: { x: number; y: number; };
-    width: number;
-    height: number;
+	id: string;
+	position: { x: number; y: number };
+	width: number;
+	height: number;
+	websocket: WebSocket | undefined;
 
-    constructor() {
-        this.id = "";
-        this.position = {x: 0, y: 0};
-        this.width = 0;
-        this.height = 0;
-    }
+	constructor(websocket?: WebSocket) {
+		this.id = "";
+		this.position = { x: 0, y: 0 };
+		this.width = 0;
+		this.height = 0;
 
-    init_vars(id: string, position: {x: number, y: number}, width: number, height: number) {
-        this.id = id;
-        this.position = position;
-        this.width = width;
-        this.height = height;
-    }
+		this.websocket = websocket;
+	}
 
-    update(position: {x: number, y: number}) {
-        this.position = position;
-    }
+	init_vars(
+		id: string,
+		position: { x: number; y: number },
+		width: number,
+		height: number
+	) {
+		this.id = id;
+		this.position = position;
+		this.width = width;
+		this.height = height;
+	}
 
-    render(context: CanvasRenderingContext2D) {
-        context.fillStyle = 'red';
-        context.fillRect(this.position.x, this.position.y, this.width, this.height);
-    }
+	handle_movement(direction: string) {
+		if (this.websocket) {
+			this.websocket.send(JSON.stringify({ type: "movement", direction }));
+		}
+	}
 }
